@@ -1,5 +1,7 @@
 <?php
-    $con = mysqli_connect(getenv("CONNECTION"), getenv("USER_ROOT"), getenv("PASSWORD"), getenv("DATABASE"));
+    
+    $envs = parse_ini_file('.env');
+    $con = mysqli_connect($envs["CONNECTION"], $envs["USER_ROOT"], $envs["PASSWORD"], $envs["DATABASE"]);
 
     if (!$con){
         echo "Erro de acesso ao banco de dados!";
