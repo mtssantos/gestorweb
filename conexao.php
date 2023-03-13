@@ -1,7 +1,7 @@
 <?php
-    use DevCoder/DotEnv;
+    // use DevCoder/DotEnv;
 
-    (new DotEnv(__DIR__ . '/.env'))->load();
+    // (new DotEnv(__DIR__ . '/.env'))->load();
 
     $con = mysqli_connect(getenv["CONNECTION"], getenv["USER_ROOT"], getenv["PASSWORD"], getenv["DATABASE"]);
 
