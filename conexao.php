@@ -4,6 +4,7 @@
 
     if (!$con){
         echo "Erro de acesso ao banco de dados!";
+        echo $_ENV["CONNECTION"];
     } else {
         // Faz Nada.
     }
