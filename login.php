@@ -1,5 +1,26 @@
 <?php
     include('conexao.php');
+    if(isset($_POST['action'])){
+        $cnpj = mysqli_real_escape_string($con, $_POST['cnpj']);
+        $password = mysqli_real_escape_string($con, md5($_POST['password']));
+        $consulta = mysqli_query($con, "select * from empresas where cnpj = '$cnpj' and senha = '$password'");
+        if(mysqli_num_rows($consulta) == 1)  {
+            session_start();
+            $dados = mysql_fetch_array($consulta);
+            $_SESSION['login'] = $dados['CNPJ'];
+            $_SESSION['fantasia'] = $dados['FANTASIA'];
+            header('Location: index.php');
+        } else {
+            $loginerro = "<br />
+                <div class='container'>
+                    <div class='text-center'>
+                        Email ou senha inválidos.
+                    </div>
+                </div>";
+        }
+
+
+    }
 
 ?>
 
@@ -20,13 +41,13 @@
         <form action="">
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="email" type="email" class="validate">
-                    <label for="email">Email</label>
+                    <input id="cnpj" name="cnpj" type="text" class="validate">
+                    <label for="cnpj">Cnpj</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="password" type="password" class="validate">
+                    <input id="password" type="password" name="password" class="validate">
                     <label for="password">Password</label>
                 </div>
             </div>
@@ -39,6 +60,7 @@
             </div>
         </form>
    </div>
+   <?php echo $loginerro; ?>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> 
 </body>
 </html>
