@@ -10,6 +10,9 @@
     if (!$con){
         echo "Erro de acesso ao banco de dados!";
         echo $ini["CONFIGURACAO"]["CONNECTION"];
+        echo $ini["CONFIGURACAO"]["USER_ROOT"];
+        echo $ini["CONFIGURACAO"]["PASSWORD"];
+        echo $ini["CONFIGURACAO"]["DATABASE"];
     } else {
         // Faz Nada.
     }
