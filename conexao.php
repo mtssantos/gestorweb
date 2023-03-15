@@ -9,7 +9,7 @@
 
     if (!$con){
         echo "Erro de acesso ao banco de dados!";
-        mysqli_connect_error();
+        error_log('Connection error: ' . mysqli_connect_error());
     } else {
         // Faz Nada.
     }
