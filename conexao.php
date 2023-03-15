@@ -3,7 +3,9 @@
 
     // (new DotEnv(__DIR__ . '/.env'))->load();
 
-    $con = mysqli_connect(getenv["CONNECTION"], getenv["USER_ROOT"], getenv["PASSWORD"], getenv["DATABASE"]);
+    $ini = parse_ini_file('config.ini');
+
+    $con = mysqli_connect($ini["CONFIGURACAO"]["CONNECTION"], $ini["CONFIGURACAO"]["USER_ROOT"], $ini["CONFIGURACAO"]["PASSWORD"], $ini["CONFIGURACAO"]["DATABASE"]);
 
     if (!$con){
         echo "Erro de acesso ao banco de dados!";
