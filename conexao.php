@@ -3,7 +3,7 @@
 
     // (new DotEnv(__DIR__ . '/.env'))->load();
 
-    $ini = parse_ini_file('.user.ini', true);
+    $ini = parse_ini_file('user.ini', true);
 
     $con = mysqli_connect($ini["CONFIGURACAO"]["CONNECTION"], $ini["CONFIGURACAO"]["USER_ROOT"], $ini["CONFIGURACAO"]["PASSWORD"], $ini["CONFIGURACAO"]["DATABASE"]);
 
