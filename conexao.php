@@ -9,6 +9,7 @@
 
     if (!$con){
         echo "Erro de acesso ao banco de dados!";
+        echo $ini["CONFIGURACAO"]["CONNECTION"];
     } else {
         // Faz Nada.
     }
