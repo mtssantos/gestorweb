@@ -1,15 +1,15 @@
 <?php
     include('conexao.php');
-    if(isset($_POST['action'])){
+    if(isset($_POST['enviar'])){
         $cnpj = mysqli_real_escape_string($con, $_POST['cnpj']);
         $password = mysqli_real_escape_string($con, md5($_POST['password']));
-        $consulta = mysqli_query($con, "select * from empresas where cnpj = '$cnpj' and senha = '$password'");
+        $consulta = mysqli_query($con, "select * from Empresas where cnpj = '$cnpj' and password = '$password'");
         if(mysqli_num_rows($consulta) == 1)  {
             session_start();
-            $dados = mysql_fetch_array($consulta);
+            $dados = mysqli_fetch_array($consulta);
             $_SESSION['login'] = $dados['CNPJ'];
             $_SESSION['fantasia'] = $dados['FANTASIA'];
-            header('Location: index.php');
+            header('Location: index.php');     
         } else {
             $loginerro = "<br />
                 <div class='container'>
@@ -18,13 +18,10 @@
                     </div>
                 </div>";
         }
-
-
     }
+    
 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -38,7 +35,7 @@
 <body>
    <div class="container">
         <h5 class="center-align">Entre para realizar login:</h5>
-        <form action="">
+        <form method="POST" action="login.php">
             <div class="row">
                 <div class="input-field col s12">
                     <input id="cnpj" name="cnpj" type="text" class="validate">
@@ -53,12 +50,13 @@
             </div>
             <div class="row">
                 <div class="center-align">
-                    <button class="btn waves-effect waves-light btn-large" type="submit" name="action">Entrar
+                    <button class="btn waves-effect waves-light btn-large" type="submit" name="enviar">Entrar
                         <i class="material-icons right">send</i>
                     </button>
                 </div>
             </div>
         </form>
+        <h6 class="center-align"> <?php echo $loginerro ?> </h6>
    </div>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> 
 </body>
