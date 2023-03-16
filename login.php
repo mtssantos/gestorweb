@@ -52,6 +52,8 @@
                         Email ou senha inválidos.
                     </div>
                 </div>";
+
+            echo $loginerro;
         }
     }
     
