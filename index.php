@@ -17,7 +17,8 @@
     <title>Gestor WEB</title>
 </head>
 <body>
-   <p>Gestor WEB. Em Breve...</p> 
+   <p>Gestor WEB. Em Breve...</p>
+   <a href="logout.php">Logout</a> 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

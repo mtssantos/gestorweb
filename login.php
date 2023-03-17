@@ -34,7 +34,7 @@
         </form>
         <?php
     include('conexao.php');
-    $loginerro = "";
+    $loginerro = " ";
     if(isset($_POST['enviar'])){
         $cnpj = mysqli_real_escape_string($con, $_POST['cnpj']);
         $password = mysqli_real_escape_string($con, md5($_POST['password']));
@@ -44,10 +44,12 @@
             $dados = mysqli_fetch_array($consulta);
             $_SESSION['login'] = $dados['CNPJ'];
             $_SESSION['fantasia'] = $dados['FANTASIA'];
-            header('Location: index.php');     
+            header('Location: index.php');
+            $loginerro = " ";  
+            echo $loginerro;   
         } else {
             $loginerro = "<br />
-                <div class='container'>
+                <div class='container center-align'>
                     <div class='text-center'>
                         Email ou senha inválidos.
                     </div>
@@ -56,8 +58,6 @@
             echo $loginerro;
         }
     }
-    
-
     ?>
    </div>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> 
