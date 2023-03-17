@@ -24,32 +24,8 @@
             </form>
         </div>
     </div>       
-   <!-- <div class="container">
-        <h5 class="center-align">Entre para realizar login:</h5>
-        <form method="POST" action="login.php">
-            <div class="row">
-                <div class="input-field col s12">
-                    <input id="cnpj" name="cnpj" type="text" class="validate">
-                    <label for="cnpj">Cnpj</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input id="password" type="password" name="password" class="validate">
-                    <label for="password">Password</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="center-align">
-                    <button class="btn waves-effect waves-light btn-large" type="submit" name="enviar">Entrar
-                        <i class="material-icons right">send</i>
-                    </button>
-                </div>
-            </div>
-        </form>
         <?php
             include('conexao.php');
-            include('style.php');
             $loginerro = " ";
             if(isset($_POST['enviar'])){
                 $cnpj = mysqli_real_escape_string($con, $_POST['cnpj']);
@@ -75,7 +51,6 @@
         }
     }
     ?>
-   </div> -->
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
 </html>
