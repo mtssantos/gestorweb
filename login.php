@@ -48,29 +48,30 @@
             </div>
         </form>
         <?php
-    include('conexao.php');
-    $loginerro = " ";
-    if(isset($_POST['enviar'])){
-        $cnpj = mysqli_real_escape_string($con, $_POST['cnpj']);
-        $password = mysqli_real_escape_string($con, md5($_POST['password']));
-        $consulta = mysqli_query($con, "select * from Empresas where cnpj = '$cnpj' and password = '$password'");
-        if(mysqli_num_rows($consulta) == 1)  {
-            session_start();
-            $dados = mysqli_fetch_array($consulta);
-            $_SESSION['login'] = $dados['CNPJ'];
-            $_SESSION['fantasia'] = $dados['FANTASIA'];
-            header('Location: index.php');
-            $loginerro = " ";  
-            echo $loginerro;   
-        } else {
-            $loginerro = "<br />
-                <div class='container center-align'>
-                    <div class='text-center'>
-                        Email ou senha inválidos.
-                    </div>
-                </div>";
+            include('conexao.php');
+            include('style.php');
+            $loginerro = " ";
+            if(isset($_POST['enviar'])){
+                $cnpj = mysqli_real_escape_string($con, $_POST['cnpj']);
+                $password = mysqli_real_escape_string($con, md5($_POST['password']));
+                $consulta = mysqli_query($con, "select * from Empresas where cnpj = '$cnpj' and password = '$password'");
+                if(mysqli_num_rows($consulta) == 1)  {
+                    session_start();
+                    $dados = mysqli_fetch_array($consulta);
+                    $_SESSION['login'] = $dados['CNPJ'];
+                    $_SESSION['fantasia'] = $dados['FANTASIA'];
+                    header('Location: index.php');
+                    $loginerro = " ";  
+                    echo $loginerro;   
+                } else {
+                    $loginerro = "<br />
+                        <div class='container center-align'>
+                            <div class='text-center'>
+                                Email ou senha inválidos.
+                            </div>
+                        </div>";
 
-            echo $loginerro;
+                    echo $loginerro;
         }
     }
     ?>
