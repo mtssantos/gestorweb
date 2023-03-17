@@ -10,7 +10,7 @@
 </head>
 <body> 
     <div class="container-md">
-        <div class="arealogin">
+        <div class="arealogin w-200">
             <form>
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Email address</label>
