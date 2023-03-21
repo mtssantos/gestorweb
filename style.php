@@ -4,4 +4,5 @@
 
 .arealogin{
     margin-top: 20vh; 
+    margin: 20vh auto;
 }
