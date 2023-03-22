@@ -9,7 +9,7 @@
     <title>Login: Gestor Web</title>
 </head>
 <body> 
-    <div class="container-md">
+    <div class="container">
         <div class="arealogin">
             <form action="login.php" method="POST">
                 <div class="mb-3">
