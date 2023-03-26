@@ -11,17 +11,18 @@
 <body> 
     <div class="container">
         <div class="arealogin">
+            <h1 class="text-center">Gestor WEB</h1>
             <form action="login.php" method="POST">
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Cnpj</label>
+                    <label for="exampleInputEmail1" class="form-label">Cnpj:</label>
                     <input type="text" name="cnpj" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                 </div>
                 <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Senha</label>
+                    <label for="exampleInputPassword1" class="form-label">Senha:</label>
                     <input type="password" name="password" class="form-control" id="exampleInputPassword1">
                 </div>
                 <div class="text-center">
-                    <button type="submit" name="enviar" class="btn btn-primary">Entrar</button>
+                    <button type="submit" name="enviar" class="btn btn-secondary w-25">Entrar</button>
                 </div>
             </form>
         </div>
