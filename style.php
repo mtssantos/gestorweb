@@ -140,3 +140,12 @@ body{
 .card{
     background-color: rgba(28, 51, 65, .75);
 }
+
+.btn-enviar{
+    margin-bottom: 6px;
+}
+
+.input-date{
+  margin-right: 6px;
+}
+

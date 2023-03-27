@@ -39,6 +39,7 @@
                     $dados = mysqli_fetch_array($consulta);
                     $_SESSION['login'] = $dados['CNPJ'];
                     $_SESSION['fantasia'] = $dados['FANTASIA'];
+                    $_SESSION['filial'] = $dados['ID_EMPRESA'];
                     header('Location: index.php');
                     $loginerro = " ";  
                     echo $loginerro;   

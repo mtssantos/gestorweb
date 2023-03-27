@@ -103,15 +103,29 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar" class="align-text-bottom"></span>
-                            This week
-                        </button>
+                        <form action="" method="post">
+                            <div class="col">
+                                <input type="date" class="input-date"><button type="button" class="btn btn-sm btn-outline-secondary btn-enviar">Buscar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
                 <div class="row">
+                    <?php
+                        include('conexao.php');
+                        $empresa = $_SESSION['filial'];
 
+
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    ?>   
                     <!-- Earnings (Monthly) Card Example -->
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card border-left-primary shadow h-100 py-2">
@@ -309,6 +323,36 @@
     </div>
 
     </main>
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script>
+
+    var options = {
+        legend: {position: 'none'},
+        width: 310,
+        height: 310  
+    }              
+    google.charts.load('current', {'packages':['corechart']});
+
+    function desenharPizza (){
+
+        var tabela = new google.visualization.DataTable();
+        tabela.addColumn('string','categorias');
+        tabela.addColumn('number','valores');
+        tabela.addRows([]);
+        <?php
+
+        ?>               
+        var grafico = new google.visualization.PieChart(document.getElementById('graficoPizza'));
+        grafico.draw(tabela, options);
+    }
+
+    google.charts.setOnLoadCallback(desenharPizza);
+
+
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
