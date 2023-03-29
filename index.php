@@ -120,7 +120,11 @@
                                         $numerovendas = $exibe['NUMEROVENDAS'];
                                         $valorbruto = number_format($exibe['VALORBRUTO'], 2, ',', '.');
                                         $valorfinal = number_format($exibe['VALORFINAL'], 2, ',', '.');
-                                        $ticketMedio = number_format($exibe['VALORFINAL'] / $exibe['NUMEROCLIENTES'], 2, ',', '.'); 
+                                        if($exibe['VALORFINAL'] == 0 && $exibe['NUMEROCLIENTES'] == 0){
+                                           $ticketMedio = number_format(0, 2, ',', '.');
+                                        } else {
+                                          $ticketMedio = number_format($exibe['VALORFINAL'] / $exibe['NUMEROCLIENTES'], 2, ',', '.');   
+                                        }
                                         $datavendas = $FilterData;
                                     }
                                 } 
