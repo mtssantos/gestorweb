@@ -108,7 +108,11 @@
                                         $numerovendas = $exibe['NUMEROVENDAS'];
                                         $valorbruto = number_format($exibe['VALORBRUTO'], 2, ',', '.');
                                         $valorfinal = number_format($exibe['VALORFINAL'], 2, ',', '.');
-                                        $ticketMedio = number_format($exibe['VALORFINAL'] / $exibe['NUMEROCLIENTES'], 2, ',', '.'); 
+                                        if($exibe['VALORFINAL'] == 0 && $exibe['NUMEROCLIENTES'] == 0){
+                                            $ticketMedio = number_format(0, 2, ',', '.');
+                                        } else {
+                                            $ticketMedio = number_format($exibe['VALORFINAL'] / $exibe['NUMEROCLIENTES'], 2, ',', '.');   
+                                        }
                                         $datavendas = $FilterData;
                                     }
                                 }
@@ -152,7 +156,7 @@
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        <div class="text-xs font-weight-bold textprimary text-uppercase mb-1">
                                             Quantidade de Vendas</div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $numerovendas; ?></div>
                                     </div>
@@ -170,7 +174,7 @@
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        <div class="text-xs font-weight-bold textsucess text-uppercase mb-1">
                                             Valor Bruto</div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo "R$ $valorbruto"; ?></div>
                                     </div>

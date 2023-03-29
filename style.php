@@ -137,6 +137,14 @@ body{
   border-bottom: 0.25rem solid #5a5c69 !important;
 }
 
+.textsucess{
+  color: #1cc88a !important;
+}
+
+.textprimary{
+  color: #4e73df !important; 
+}
+
 .card{
     background-color: rgba(28, 51, 65, .75);
 }
