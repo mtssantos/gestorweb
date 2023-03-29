@@ -94,38 +94,54 @@
                 </div>
 
             </nav>
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+ 
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                        <?php
+                            include('conexao.php');
+                            $empresa = $_SESSION['filial'];
+                            $datavendas = date('Y-m-d');
+                            if(isset($_POST['date'])){
+                                $FilterData = $_POST['date'];
+                                $result = mysqli_query($con, "SELECT COUNT(*) AS NUMEROVENDAS, SUM(Total_Produtos) AS VALORBRUTO, SUM(Total_Final) AS VALORFINAL, COUNT(Cli_For__Codigo) AS NUMEROCLIENTES FROM Vendas WHERE FILIAL = '{$empresa}' AND DATA = '{$FilterData}'");
+                                if (mysqli_num_rows($result) > 0){
+                                    while($exibe = mysqli_fetch_array($result)) {
+                                        $numerovendas = $exibe['NUMEROVENDAS'];
+                                        $valorbruto = number_format($exibe['VALORBRUTO'], 2, ',', '.');
+                                        $valorfinal = number_format($exibe['VALORFINAL'], 2, ',', '.');
+                                        $ticketMedio = number_format($exibe['VALORFINAL'] / $exibe['NUMEROCLIENTES'], 2, ',', '.'); 
+                                        $datavendas = $FilterData;
+                                    }
+                                }
+                            } else {
+                                $FilterData = date('d-m-Y');
+                                $result = mysqli_query($con, "SELECT COUNT(*) AS NUMEROVENDAS, SUM(Total_Produtos) AS VALORBRUTO, SUM(Total_Final) AS VALORFINAL, COUNT(Cli_For__Codigo) AS NUMEROCLIENTES FROM Vendas WHERE FILIAL = '{$empresa}' AND DATA = CURRENT_DATE");
+                                if (mysqli_num_rows($result) > 0){
+                                    while($exibe = mysqli_fetch_array($result)) {
+                                        $numerovendas = $exibe['NUMEROVENDAS'];
+                                        $valorbruto = number_format($exibe['VALORBRUTO'], 2, ',', '.');
+                                        $valorfinal = number_format($exibe['VALORFINAL'], 2, ',', '.');
+                                        $ticketMedio = number_format($exibe['VALORFINAL'] / $exibe['NUMEROCLIENTES'], 2, ',', '.'); 
+                                        $datavendas = $FilterData;
+                                    }
+                                } 
+                            }
+                        ?>
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Dashboard</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
                             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
                         </div>
-                        <form action="" method="post">
+                        <form method="post" action="">
                             <div class="col">
-                                <input type="date" class="input-date"><button type="button" class="btn btn-sm btn-outline-secondary btn-enviar">Buscar</button>
+                                <input type="date" name="date" value="<?php echo $datavendas; ?>" class="input-date"><button type="submit" class="btn btn-sm btn-outline-secondary btn-enviar">Buscar</button>
                             </div>
                         </form>
                     </div>
                 </div>
 
                 <div class="row">
-                    <?php
-                        include('conexao.php');
-                        $empresa = $_SESSION['filial'];
-
-
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    ?>   
                     <!-- Earnings (Monthly) Card Example -->
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card border-left-primary shadow h-100 py-2">
@@ -134,7 +150,7 @@
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                             Quantidade de Vendas</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $numerovendas; ?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="bi bi-cart-fill h4"></i>
@@ -152,7 +168,7 @@
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                             Valor Bruto</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">R$ 0,00</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo "R$ $valorbruto"; ?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="bi bi-currency-dollar h4"></i>
@@ -173,7 +189,7 @@
                                         </div>
                                         <div class="row no-gutters align-items-center">
                                             <div class="col-auto">
-                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">R$ 0,00</div>
+                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo "R$ $valorfinal"; ?></div>
                                             </div>
                                         </div>
                                     </div>
@@ -193,7 +209,7 @@
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                             Ticket Médio</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">R$ 0,00</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo "R$ $ticketMedio"; ?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="bi bi-tags-fill h4"></i>
@@ -288,25 +304,65 @@
                                 <h6 class="m-0 font-weight-bold text-light">Análise do Mês</h6>
                             </div>
                             <div class="card-body">
+                                
+                                <?php
+                                    if(isset($_POST['date'])){
+                                        $FilterData = $_POST['date'];
+                                        $result = mysqli_query($con, "SELECT COUNT(*) AS NUMEROVENDAS, SUM(Total_Produtos) AS VALORBRUTO, SUM(Total_Desconto) AS DESCONTO, SUM(Total_Final) AS VALORFINAL FROM Vendas WHERE FILIAL = '{$empresa}' AND MONTH('{$FilterData}') ");
+                                        if (mysqli_num_rows($result) > 0){
+                                            while($exibe = mysqli_fetch_array($result)) {
+                                                $numerovendasmes = $exibe['NUMEROVENDAS'];
+                                                $valorbrutomes = number_format($exibe['VALORBRUTO'], 2, ',', '.');
+                                                $valordescontomes = number_format($exibe['DESCONTO'], 2, ',', '.');
+                                                $valorfinalmes = number_format($exibe['VALORFINAL'], 2, ',', '.');
+                                                $datavendas = $FilterData;
+                                            }
+                                        }
+                                    } else {
+                                        $FilterData = date('d-m-Y');
+                                        $result = mysqli_query($con, "SELECT COUNT(*) AS NUMEROVENDAS, SUM(Total_Produtos) AS VALORBRUTO, SUM(Total_Desconto) AS DESCONTO, SUM(Total_Final) AS VALORFINAL FROM Vendas WHERE FILIAL = '{$empresa}' AND MONTH(CURRENT_DATE)");
+                                        if (mysqli_num_rows($result) > 0){
+                                            while($exibe = mysqli_fetch_array($result)) {
+                                                $numerovendasmes = $exibe['NUMEROVENDAS'];
+                                                $valorbrutomes = number_format($exibe['VALORBRUTO'], 2, ',', '.');
+                                                $valordescontomes = number_format($exibe['DESCONTO'], 2, ',', '.');
+                                                $valorfinalmes = number_format($exibe['VALORFINAL'], 2, ',', '.');
+                                                $datavendas = $FilterData;
+                                            }
+                                        } 
+                                    }
+                                //  $datavendas = date('Y-m-d');   
+                                //  $FilterData = $datavendas;
+                                //  $result = mysqli_query($con, "SELECT COUNT(*) AS NUMEROVENDAS, SUM(Total_Produtos) AS VALORBRUT, SUM(Total_Desconto) AS DESCONTO, SUM(Total_Final) AS VALORFINAL FROM Vendas WHERE FILIAL = '{$empresa}' AND MONTH(DATA) = '{$FilterData}'");
+                                //  if (mysqli_num_rows($result) > 0){
+                                //     while($exibe = mysqli_fetch_array($result)) {
+                                //          $numerovendasmes = $exibe['NUMEROVENDAS'];
+                                //          $valorbrutomes = number_format($exibe['VALORBRUTO'], 2, ',', '.');
+                                //          $valordescontomes = number_format($exibe['DESCONTO'], 2, ',', '.');
+                                //          $valorfinalmes = number_format($exibe['VALORFINAL'], 2, ',', '.');
+                                //          $datavendas = $FilterData;
+                                //     }
+                                //  }   
+                                ?>
                                 <table class="table text-light">
                                     <thead>
                                     </thead>
                                     <tbody>
                                         <tr class="text-light">
                                             <td>Vendas Realizadas</td>
-                                            <td>0</td>
+                                            <td><?php echo $numerovendasmes; ?></td>
                                         </tr>
                                         <tr class="text-light">
                                             <td>Total Vendido Bruto</td>
-                                            <td>R$ 0,00</td>
+                                            <td><?php echo "R$ $valorbrutomes"; ?></td>
                                         </tr>
                                         <tr class="text-light">
                                             <td>Total Desconto Vendas</td>
-                                            <td> R$ 0,00</td>
+                                            <td><?php echo "R$ $valordescontomes"; ?></td>
                                         </tr>
                                         <tr class="text-light">
                                             <td>Total Vendido Líquido</td>
-                                            <td>R$ 0,00</td>
+                                            <td><?php echo "R$ $valorfinalmes"; ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
