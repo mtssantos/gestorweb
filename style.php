@@ -2,6 +2,8 @@
     header("Content-type: text/css");
 ?>
 
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
 .arealogin{
     margin-top: 20vh; 
     margin: 20vh auto;
@@ -10,6 +12,7 @@
 body{
     background-color: #1C3341;
     color: white;
+    <!-- background-color: #c5c5c5; -->
 }
 
 .navbar-brand {
@@ -147,6 +150,7 @@ body{
 
 .card{
     background-color: rgba(28, 51, 65, .75);
+    <!-- background-color: #c5c5c5; -->
 }
 
 .btn-enviar{
@@ -157,3 +161,6 @@ body{
   margin-right: 6px;
 }
 
+#chart{
+  width: 700px;
+}
