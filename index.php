@@ -36,7 +36,6 @@
                 </div>
             </div>
         </header>
-        <div class="container-fluid"></div>
                 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar collapse">
                     <div class="position-sticky pt-3 sidebar-sticky">
                         <ul class="nav flex-column">
@@ -71,24 +70,28 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">
                                     <span data-feather="file-text" class="align-text-bottom"></span>
-                                    Last quarter
+                                    
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">
                                     <span data-feather="file-text" class="align-text-bottom"></span>
-                                    Social engagement
+                                    
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">
                                     <span data-feather="file-text" class="align-text-bottom"></span>
-                                    Year-end sale
+                                    
                                 </a>
                             </li>
                         </ul>
+                        <div class="navbar-nav-responsive">
+                            <div class="nav-item text-nowrap">
+                                <a class="nav-link px-3" href="./logout.php">Sair</a>
+                            </div>
+                        </div>
                     </div>
-
                 </nav>
 
                     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -133,10 +136,6 @@
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                         <h1 class="h2">Dashboard</h1>
                         <div class="btn-toolbar mb-2 mb-md-0">
-                            <div class="btn-group me-2">
-                                <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                            </div>
                             <form method="post" action="">
                                 <div class="col">
                                     <input type="date" name="date" value="<?php echo $datavendas; ?>" class="input-date"><button type="submit" class="btn btn-sm btn-outline-secondary btn-enviar">Buscar</button>
@@ -376,10 +375,8 @@
                                 while($exibe = mysqli_fetch_array($result)) {
                                     if($exibe['VALORFINAL'] == 0 && $exibe['NUMEROCLIENTES'] == 0){
                                         $ticketMedio = number_format(0, 2, ',', '.');
-                                        echo $ticketMedio;
                                     } else {
                                         $ticketMedio = number_format($exibe['VALORFINAL'] / $exibe['NUMEROCLIENTES'], 2, ',', '.');   
-                                        echo $ticketMedio;
                                     }
                                 }
                             }

@@ -9,6 +9,7 @@
     margin: 20vh auto;
     max-width: 600px;
 }
+
 body{
     background-color: #1C3341;
     color: white;
@@ -26,6 +27,7 @@ body{
   top: .25rem;
   right: 1rem;
 }
+
 
 .navbar .form-control {
   padding: .75rem 1rem;
@@ -164,3 +166,26 @@ body{
 #chart{
   width: 700px;
 }
+
+.navbar-nav-responsive{
+  display: none;
+}
+
+@media (max-width: 500px)
+{
+  main {
+    width: 100%;
+    padding-right: var(--bs-gutter-x,.75rem);
+    padding-left: var(--bs-gutter-x,.75rem);
+    margin-right: auto;
+    margin-left: auto;
+ }
+ .navbar-nav{
+  display: none;
+ }
+ .navbar-nav-responsive{
+  display: block;
+ }
+}
+
+
