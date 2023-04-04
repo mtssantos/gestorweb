@@ -142,7 +142,18 @@
                             </form>
                         </div>
                     </div>
-
+                    <div class="d-flex pt-1 pb-3">
+                    <?php
+                        $result = mysqli_query($con, "SELECT * FROM Log_Envio WHERE Filial = {$empresa} ORDER BY DATA, HORA DESC LIMIT 1");
+                        while($exibe = mysqli_fetch_assoc($result)){
+                            echo "
+                                <span>Última Atualização: ".$exibe['Data']."-".$exibe['Hora']."</span>
+                            ";
+                        }                 
+                    
+                    ?>
+                        
+                    </div>
                     <div class="row">
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
