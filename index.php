@@ -146,8 +146,11 @@
                     <?php
                         $result = mysqli_query($con, "SELECT * FROM Log_Envio WHERE Filial = {$empresa} ORDER BY DATA, HORA DESC LIMIT 1");
                         while($exibe = mysqli_fetch_assoc($result)){
+                            $dataoriginal = $exibe['Data'];
+                            $timestamp = strtotime($dataoriginal);
+                            $novaData = date("d/m/Y", $timestamp);
                             echo "
-                                <span>Última Atualização: ".$exibe['Data']."-".$exibe['Hora']."</span>
+                                <span>Última Atualização: <b>".$novaData."</b> - <b>".$exibe['Hora']."</b></span>
                             ";
                         }                 
                     
@@ -249,23 +252,23 @@
                                             if(isset($_POST['date'])){
                                                 $FilterData = $_POST['date'];
                                                 $sql = <<<EOT
-                                                select SUM(a.VALOR) AS VALORES from Pagamentos a
-                                                WHERE a.Descricao = 'DINHEIRO' OR Descricao = 'DINHEIRO TICKET' AND FILIAL = $empresa AND DATA = '$FilterData'
-                                                
-                                                UNION ALL
+                                                    select SUM(a.VALOR) AS VALORES from Pagamentos a
+                                                    WHERE ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'DINHEIRO')) or ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'DINHEIRO TICKET'))
+                                                    
+                                                    UNION ALL
 
-                                                select SUM(a.VALOR) AS VALORES from Pagamentos a
-                                                WHERE a.Descricao = 'CARTAO CREDITO' OR Descricao = 'CARTAO CREDITO POS' AND FILIAL = $empresa AND DATA = '$FilterData'
+                                                    select SUM(a.VALOR) AS VALORES from Pagamentos a
+                                                    WHERE ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'CARTAO CREDITO')) or ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'CARTAO CREDITO POS'))
 
-                                                UNION ALL
+                                                    UNION ALL
 
-                                                select SUM(a.VALOR) AS VALORES from Pagamentos a
-                                                WHERE a.Descricao = 'CARTÃO DEBITO' OR Descricao = 'CARTÃO DEBITO POS' AND FILIAL = $empresa AND DATA = '$FilterData'
+                                                    select SUM(a.VALOR) AS VALORES from Pagamentos a
+                                                    WHERE ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'CARTAO DEBITO')) or ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'CARTAO DEBITO POS'))
 
-                                                UNION ALL
+                                                    UNION ALL
 
-                                                select SUM(a.VALOR) AS VALORES from Pagamentos a
-                                                WHERE a.Descricao = 'PIX' AND FILIAL = $empresa AND DATA = '$FilterData'
+                                                    select SUM(a.VALOR) AS VALORES from Pagamentos a
+                                                    WHERE a.Descricao = 'PIX' AND FILIAL = $empresa AND DATA = '$FilterData'
                                                 EOT;
                                                 $consulta = mysqli_query($con, $sql);
                                                 while($pagamentos = mysqli_fetch_assoc($consulta)){
@@ -280,17 +283,17 @@
                                                 $FilterData = date('Y-m-d');
                                                 $sql = <<<EOT
                                                     select SUM(a.VALOR) AS VALORES from Pagamentos a
-                                                    WHERE a.Descricao = 'DINHEIRO' OR Descricao = 'DINHEIRO TICKET' AND FILIAL = $empresa AND DATA = '$FilterData'
+                                                    WHERE ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'DINHEIRO')) or ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'DINHEIRO TICKET'))
                                                     
                                                     UNION ALL
 
                                                     select SUM(a.VALOR) AS VALORES from Pagamentos a
-                                                    WHERE a.Descricao = 'CARTAO CREDITO' OR Descricao = 'CARTAO CREDITO POS' AND FILIAL = $empresa AND DATA = '$FilterData'
+                                                    WHERE ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'CARTAO CREDITO')) or ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'CARTAO CREDITO POS'))
 
                                                     UNION ALL
 
                                                     select SUM(a.VALOR) AS VALORES from Pagamentos a
-                                                    WHERE a.Descricao = 'CARTAO DEBITO' OR Descricao = 'CARTAO DEBITO POS' AND FILIAL = $empresa AND DATA = '$FilterData'
+                                                    WHERE ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'CARTAO DEBITO')) or ((a.FILIAL = $empresa AND a.Data = '$FilterData') and (a.Descricao = 'CARTAO DEBITO POS'))
 
                                                     UNION ALL
 
