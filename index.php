@@ -144,7 +144,7 @@
                     </div>
                     <div class="d-flex pt-1 pb-3">
                     <?php
-                        $result = mysqli_query($con, "SELECT * FROM Log_Envio WHERE Filial = {$empresa} ORDER BY DATA, HORA DESC LIMIT 1");
+                        $result = mysqli_query($con, "SELECT * FROM Log_Envio WHERE Filial = {$empresa} AND Data = CURRENT_DATE ORDER BY Data, HORA DESC LIMIT 1");
                         while($exibe = mysqli_fetch_assoc($result)){
                             $dataoriginal = $exibe['Data'];
                             $timestamp = strtotime($dataoriginal);
