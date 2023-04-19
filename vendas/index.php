@@ -156,6 +156,35 @@
                             }
                            ?>
                         </tbody>
+                        <?php 
+                                if(isset($_POST['date-inicial']) and isset($_POST['date-final'])){
+                                    $datainicial = $_POST['date-inicial'];
+                                    $datafinal = $_POST['date-final'];  
+                                    $result = mysqli_query($con, "SELECT SUM(Total_Final) as Valor FROM Vendas WHERE FILIAL = {$empresa} and DATA BETWEEN '{$datainicial}' AND '{$datafinal}'");
+                                    while($exibe = mysqli_fetch_assoc($result)){
+                                        $valor = number_format($exibe['Valor'], 2, ',', '.');
+                                        
+                                    }
+                                } else {
+                                    $datainicial = 'CURRENT_DATE';
+                                    $datafinal = 'CURRENT_DATE';
+                                    $result = mysqli_query($con, "SELECT SUM(Total_Final) as Valor FROM Vendas WHERE FILIAL = {$empresa} and DATA BETWEEN {$datainicial} AND {$datafinal}");
+                                    while($exibe = mysqli_fetch_assoc($result)){
+                                        $valor = number_format($exibe['Valor'], 2, ',', '.');
+                                    }
+                                }
+                        
+                        
+                        ?>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>Total de Vendas:</b></td>
+                                <td><b>R$ <?php echo $valor; ?></b></td>
+                            </tr>
+                        </tfoot>
                         </table>
                     </div>
                 </main>
