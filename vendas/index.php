@@ -94,12 +94,21 @@
                 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                         <h1 class="h2">Vendas Realizadas</h1>
+                        <?php
+                          if(isset($_POST['date-inicial']) and isset($_POST['date-final'])){
+                            $datainicial = $_POST['date-inicial'];
+                            $datafinal = $_POST['date-final'];
+                          } else {
+                          } 
+                        
+                        
+                        ?>
                         <div class="btn-toolbar mb-2 mb-md-0">
-                            <form method="post" action="">
+                            <form method="post" action="index.php">
                                 <div class="col">
                                     <input type="date" name="date-inicial" value="<?php echo $datainicial; ?>" class="input-date-initial m-1"><input type="date" name="date-final" value="<?php echo $datafinal; ?>" class="input-date-initial m-1"><button type="submit" class="btn btn-sm btn-outline-secondary btn-enviar">Buscar</button>
                                 </div>
-                            </form>
+                            </form>  
                         </div>
                     </div>
                     <div class="table-responsive">
