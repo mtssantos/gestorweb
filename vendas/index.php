@@ -98,10 +98,7 @@
                           if(isset($_POST['date-inicial']) and isset($_POST['date-final'])){
                             $datainicial = $_POST['date-inicial'];
                             $datafinal = $_POST['date-final'];
-                          } else {
-                          } 
-                        
-                        
+                          }
                         ?>
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <form method="post" action="index.php">
