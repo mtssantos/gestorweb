@@ -590,7 +590,7 @@
                         <div class="col-xl-6 col-lg-5">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-light">Acompanhamento Mensal</h6>
+                                    <h6 class="m-0 font-weight-bold text-light">Acompanhamento Mensal - Em desenvolvimento</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex justify-content-center">
@@ -602,7 +602,7 @@
                         <div class="col-xl-6 col-lg-5">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-light">Análise de Meta</h6>
+                                    <h6 class="m-0 font-weight-bold text-light">Análise de Meta - Em desenvolvimento</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex justify-content-center">
