@@ -48,39 +48,8 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="../produtos">
                                     Produtos
-                                </a>
-                            </li>
-                        </ul>
-
-                        <h6
-                            class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-ligth text-uppercase">
-                            <span>Relatórios</span>
-                        </h6>
-                        <ul class="nav flex-column mb-2">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span data-feather="file-text" class="align-text-bottom"></span>
-                                    Vendas no Mês
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span data-feather="file-text" class="align-text-bottom"></span>
-                                    
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span data-feather="file-text" class="align-text-bottom"></span>
-                                    
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span data-feather="file-text" class="align-text-bottom"></span>
-                                    
                                 </a>
                             </li>
                         </ul>

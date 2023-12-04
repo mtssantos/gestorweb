@@ -40,7 +40,9 @@
                     $_SESSION['login'] = $dados['CNPJ'];
                     $_SESSION['fantasia'] = $dados['FANTASIA'];
                     $_SESSION['filial'] = $dados['ID_EMPRESA'];
-                    header('Location: index.php');
+                    $_SESSION['Type_user'] = $dados['TYPE_USER'];
+                    header('location: index.php');
+                    exit;
                     $loginerro = " ";  
                     echo $loginerro;   
                 } else {
