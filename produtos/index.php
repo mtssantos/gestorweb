@@ -113,7 +113,7 @@
                                 $campo = mysqli_real_escape_string($con, $campo);
 
                                 mysqli_set_charset($con, "utf8");
-                                
+
                                 $filtro = "";
                                 $opr = "";
                             
@@ -148,7 +148,15 @@
                                 $result = mysqli_query($con, $query);
                             
                                 if ($result) {
+                                    $totalEstoque = 0;
+                                    $totalCusto = 0;
+                                    $totalVenda = 0;
+
+
                                     while($exibe = mysqli_fetch_assoc($result)){
+                                        $totalEstoque += $exibe['Estoque_Atual'];
+                                        $totalCusto += $exibe['PCusto'];
+                                        $totalVenda += $exibe['PVenda'];
                                         echo "
                                             <tr>
                                                 <td>".$exibe['Codigo']."</td>
@@ -166,6 +174,11 @@
                                     echo "Erro na consulta: " . mysqli_error($con);
                                 }
                             } else {
+
+                                $totalEstoque = 0;
+                                $totalCusto = 0;
+                                $totalVenda = 0;
+                                
                                 $empresa = mysqli_real_escape_string($con, $empresa);
 
                                 mysqli_set_charset($con, "utf8");
@@ -176,6 +189,9 @@
                             
                                 if ($result) {
                                     while($exibe = mysqli_fetch_assoc($result)){
+                                        $totalEstoque += $exibe['Estoque_Atual'];
+                                        $totalCusto += $exibe['PCusto'];
+                                        $totalVenda += $exibe['PVenda'];
                                         echo "
                                             <tr>
                                                 <td>".$exibe['Codigo']."</td>
@@ -195,23 +211,23 @@
                             }                            
                         ?>
                         </tbody>
-                        <?php 
-                                $empresa = mysqli_real_escape_string($con, $empresa);
+                         <?php 
+                                // $empresa = mysqli_real_escape_string($con, $empresa);
 
-                                mysqli_set_charset($con, "utf8");
+                                // mysqli_set_charset($con, "utf8");
                                 
-                                $query = "SELECT SUM(Estoque_Atual) as EstoqueTotal, SUM(PCusto) as TotalCusto, SUM(PVenda) as TotalVenda FROM Estoque WHERE Filial = {$empresa}";
+                                // $query = "SELECT SUM(Estoque_Atual) as EstoqueTotal, SUM(PCusto) as TotalCusto, SUM(PVenda) as TotalVenda FROM Estoque WHERE Filial = {$empresa}";
                             
-                                $result = mysqli_query($con, $query);
+                                // $result = mysqli_query($con, $query);
 
-                                if($result){
-                                    while($exibe = mysqli_fetch_assoc($result)){
-                                        $totalEstoque = number_format($exibe['EstoqueTotal'], 3, ',', '.');
-                                        $totalCusto = number_format($exibe['TotalCusto'], 2, ',', '.');
-                                        $totalVenda = number_format($exibe['TotalVenda'], 2, ',', '.');
-                                    }
-                                }
-                        ?>
+                                // if($result){
+                                //     while($exibe = mysqli_fetch_assoc($result)){
+                                //         $totalEstoque = number_format($exibe['EstoqueTotal'], 3, ',', '.');
+                                //         $totalCusto = number_format($exibe['TotalCusto'], 2, ',', '.');
+                                //         $totalVenda = number_format($exibe['TotalVenda'], 2, ',', '.');
+                                //     }
+                                // }
+                        ?> 
                         <tfoot>
                             <tr>
                                 <td></td>
@@ -219,9 +235,9 @@
                                 <td></td>
                                 <td></td>
                                 <td><b>Totais:</b></td>
-                                <td><b><?php echo $totalEstoque; ?></b></td>
-                                <td><b>R$ <?php echo $totalCusto; ?></b></td>
-                                <td><b>R$ <?php echo $totalVenda; ?></b></td>
+                                <td><b><?php echo number_format($totalEstoque, 3, ',', '.'); ?></b></td>
+                                <td><b>R$ <?php echo number_format($totalCusto, 2, ',', '.');?></b></td>
+                                <td><b>R$ <?php echo number_format($totalVenda, 2, ',', '.'); ?></b></td>
                             </tr>
                         </tfoot>
                     </table>
