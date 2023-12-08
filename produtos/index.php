@@ -155,8 +155,8 @@
 
                                     while($exibe = mysqli_fetch_assoc($result)){
                                         $totalEstoque += $exibe['Estoque_Atual'];
-                                        $totalCusto += $exibe['PCusto'];
-                                        $totalVenda += $exibe['PVenda'];
+                                        $totalCusto += $exibe['PCusto'] * $exibe['Estoque_Atual'];
+                                        $totalVenda += $exibe['PVenda'] * $exibe['Estoque_Atual'];   
                                         echo "
                                             <tr>
                                                 <td>".$exibe['Codigo']."</td>
@@ -178,7 +178,7 @@
                                 $totalEstoque = 0;
                                 $totalCusto = 0;
                                 $totalVenda = 0;
-                                
+
                                 $empresa = mysqli_real_escape_string($con, $empresa);
 
                                 mysqli_set_charset($con, "utf8");
@@ -190,8 +190,9 @@
                                 if ($result) {
                                     while($exibe = mysqli_fetch_assoc($result)){
                                         $totalEstoque += $exibe['Estoque_Atual'];
-                                        $totalCusto += $exibe['PCusto'];
-                                        $totalVenda += $exibe['PVenda'];
+                                        $totalCusto += $exibe['PCusto'] * $exibe['Estoque_Atual'];
+                                        $totalVenda += $exibe['PVenda'] * $exibe['Estoque_Atual'];                                   
+
                                         echo "
                                             <tr>
                                                 <td>".$exibe['Codigo']."</td>
@@ -211,23 +212,6 @@
                             }                            
                         ?>
                         </tbody>
-                         <?php 
-                                // $empresa = mysqli_real_escape_string($con, $empresa);
-
-                                // mysqli_set_charset($con, "utf8");
-                                
-                                // $query = "SELECT SUM(Estoque_Atual) as EstoqueTotal, SUM(PCusto) as TotalCusto, SUM(PVenda) as TotalVenda FROM Estoque WHERE Filial = {$empresa}";
-                            
-                                // $result = mysqli_query($con, $query);
-
-                                // if($result){
-                                //     while($exibe = mysqli_fetch_assoc($result)){
-                                //         $totalEstoque = number_format($exibe['EstoqueTotal'], 3, ',', '.');
-                                //         $totalCusto = number_format($exibe['TotalCusto'], 2, ',', '.');
-                                //         $totalVenda = number_format($exibe['TotalVenda'], 2, ',', '.');
-                                //     }
-                                // }
-                        ?> 
                         <tfoot>
                             <tr>
                                 <td></td>
