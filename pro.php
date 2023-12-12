@@ -376,6 +376,7 @@
                     <?php 
                         if(isset($_POST['date'])){
                             $FilterData = $_POST['date']; 
+                            mysqli_query($con, "SET SQL_BIG_SELECTS=1");
                             $result = mysqli_query($con, "SELECT COUNT(*) AS NUMEROVENDAS, SUM(Total_Produtos) AS VALORBRUTO, SUM(Total_Desconto) AS DESCONTO, SUM(Total_Final) AS VALORFINAL, COUNT(Cli_For__Codigo) AS NUMEROCLIENTES FROM Vendas WHERE FILIAL = '{$empresa}' AND YEARWEEK('{$FilterData}', 1) "); 
                             if (mysqli_num_rows($result) > 0){
                                 while($exibe = mysqli_fetch_array($result)) {
@@ -388,6 +389,7 @@
                             }
                         } else {
                             $FilterData = date('d-m-Y');
+                            mysqli_query($con, "SET SQL_BIG_SELECTS=1");
                             $result = mysqli_query($con, "SELECT COUNT(*) AS NUMEROVENDAS, SUM(Total_Produtos) AS VALORBRUTO, SUM(Total_Desconto) AS DESCONTO, SUM(Total_Final) AS VALORFINAL, COUNT(Cli_For__Codigo) AS NUMEROCLIENTES FROM Vendas WHERE FILIAL = '{$empresa}' AND YEARWEEK(NOW(), 1) ");  
                             if (mysqli_num_rows($result) > 0){
                                 while($exibe = mysqli_fetch_array($result)) {
@@ -441,6 +443,8 @@
                                                 GROUP BY
                                                     p.Classe
                                             EOT;
+
+                                            mysqli_query($con, "SET SQL_BIG_SELECTS=1");
                                             $consulta = mysqli_query($con, $sql);
                                             while($classeVendas = mysqli_fetch_assoc($consulta)){
                                                 if($classeVendas['Porcentagem'] == 0){
@@ -475,7 +479,13 @@
                                                 GROUP BY
                                                     p.Classe
                                             EOT;
+
+                                            mysqli_query($con, "SET SQL_BIG_SELECTS=1");
+
                                             $consulta = mysqli_query($con, $sql);
+                                            if (!$consulta) {
+                                                die('Erro na consulta SQL: ' . mysqli_error($con));
+                                            }
                                             while($classeVendas = mysqli_fetch_assoc($consulta)){
                                                 if($classeVendas['Porcentagem'] == 0){
                                                     $valoresClasses[] = 0; 
@@ -580,6 +590,110 @@
                                         $valoresGrupos = implode(',', $valoresGrupos);
                                         $grupos = implode(',', $grupos);                                                               
                                     ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-light">Produtos por Classe - Geral</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-center">
+                                        <div id="chartproductsclass"></div>
+                                        <?php
+
+                                            $classesGeral = [];
+                                            $valoresClassesGeral = [];
+                                        
+                                            mysqli_set_charset($con, 'utf8');
+                                            $sql = <<<EOT
+                                                SELECT
+                                                    p.Classe,
+                                                    COUNT(*) AS QuantidadeItens,
+                                                    ROUND((COUNT(*) * 100.0) / total.TotalGeral, 2) AS Porcentagem
+                                                FROM
+                                                    Estoque p
+                                                CROSS JOIN (
+                                                    SELECT COUNT(*) AS TotalGeral
+                                                    FROM Estoque
+                                                    WHERE Filial = '$empresa'
+                                                ) total
+                                                WHERE
+                                                    p.Filial = '$empresa'
+                                                GROUP BY
+                                                    p.Classe
+                                            EOT;
+
+                                            mysqli_query($con, "SET SQL_BIG_SELECTS=1");
+
+                                            $consulta = mysqli_query($con, $sql);
+                                            while($classeProdutos = mysqli_fetch_assoc($consulta)){
+                                                if($classeProdutos['Porcentagem'] == 0){
+                                                    $valoresClassesGeral[] = 0; 
+                                                } else {
+                                                    $classesGeral[] = $classeProdutos['Classe'];
+                                                    $valoresClassesGeral[] = $classeProdutos['Porcentagem'];
+                                                }                                                    
+                                            }
+
+                                            $valoresClassesGeral = implode(',', $valoresClassesGeral);
+                                            $classesGeral = implode(',', $classesGeral); 
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-light">Produtos por Grupo - Geral</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-center">
+                                        <div id="chartproductsgroup"></div>
+                                        <?php
+
+                                            $gruposGeral = [];
+                                            $valoresGruposGeral = [];
+                                        
+                                            mysqli_set_charset($con, 'utf8');
+                                            $sql = <<<EOT
+                                                SELECT
+                                                    p.Grupo,
+                                                    COUNT(*) AS QuantidadeItens,
+                                                    ROUND((COUNT(*) * 100.0) / total.TotalGeral, 2) AS Porcentagem
+                                                FROM
+                                                    Estoque p
+                                                CROSS JOIN (
+                                                    SELECT COUNT(*) AS TotalGeral
+                                                    FROM Estoque
+                                                    WHERE Filial = '$empresa'
+                                                ) total
+                                                WHERE
+                                                    p.Filial = '$empresa'
+                                                GROUP BY
+                                                    p.Grupo
+                                            EOT;
+
+                                            mysqli_query($con, "SET SQL_BIG_SELECTS=1");
+
+                                            $consulta = mysqli_query($con, $sql);
+                                            while($classeProdutos = mysqli_fetch_assoc($consulta)){
+                                                if($classeProdutos['Porcentagem'] == 0){
+                                                    $valoresGruposGeral[] = 0; 
+                                                } else {
+                                                    $gruposGeral[] = $classeProdutos['Grupo'];
+                                                    $valoresGruposGeral[] = $classeProdutos['Porcentagem'];
+                                                }                                                    
+                                            }
+
+                                            $valoresGruposGeral = implode(',', $valoresGruposGeral);
+                                            $gruposGeral = implode(',', $gruposGeral); 
+                                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -721,6 +835,167 @@
     
             var chart = new ApexCharts(document.querySelector("#chartgroup"), options);
             chart.render();
+        </script>
+
+        <script type="text/javascript">
+      
+            var options = {
+                series: [{
+                    data: [<?php echo $valoresClassesGeral; ?>]
+                }],
+                chart: {
+                    height: 350,
+                    width: 650,
+                    type: 'bar',
+                    foreColor: '#fff', 
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 10,
+                        dataLabels: {
+                            position: 'top',  
+                        },
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val + "%";
+                    },
+                    offsetY: 0,
+                    style: {
+                        fontSize: '12px',
+                        colors: ["#fff"]
+                    }
+                },
+                
+                xaxis: {
+                    categories: [<?php echo "'" . str_replace(",", "','", $classesGeral) . "'"; ?>],
+                    position: '',
+                    colors: ["#fff"],
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    stroke: {
+                        color: '#fff',
+                        width: 0,
+                        dashArray: 0,
+                    },
+                    crosshairs: {
+                        fill: {
+                            type: 'solid',
+                            color: '#fff',
+                            gradient: {
+                                colorFrom: '#fff',
+                                colorTo: '#fff',
+                                stops: [0, 100],
+                                opacityFrom: 0.4,
+                                opacityTo: 0.5,
+                            }
+                        }
+                    }
+                },
+                yaxis: {
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    labels: {
+                        show: false,
+                        formatter: function (val) {
+                            return val + "%";
+                        }
+                    }
+                }
+                };
+
+                var chart = new ApexCharts(document.querySelector("#chartproductsclass"), options);
+                chart.render();
+        </script>
+
+        <script type="text/javascript">
+                 var options = {
+                series: [{
+                    data: [<?php echo $valoresGruposGeral; ?>]
+                }],
+                chart: {
+                    height: 350,
+                    width: 650,
+                    type: 'bar',
+                    foreColor: '#fff', 
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 10,
+                        dataLabels: {
+                            position: 'top',  
+                        },
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val + "%";
+                    },
+                    offsetY: 0,
+                    style: {
+                        fontSize: '12px',
+                        colors: ["#fff"]
+                    }
+                },
+                
+                xaxis: {
+                    categories: [<?php echo "'" . str_replace(",", "','", $gruposGeral) . "'"; ?>],
+                    position: '',
+                    colors: ["#fff"],
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    stroke: {
+                        color: '#fff',
+                        width: 0,
+                        dashArray: 0,
+                    },
+                    crosshairs: {
+                        fill: {
+                            type: 'solid',
+                            color: '#fff',
+                            gradient: {
+                                colorFrom: '#fff',
+                                colorTo: '#fff',
+                                stops: [0, 100],
+                                opacityFrom: 0.4,
+                                opacityTo: 0.5,
+                            }
+                        }
+                    }
+                },
+                yaxis: {
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    labels: {
+                        show: false,
+                        formatter: function (val) {
+                            return val + "%";
+                        }
+                    }
+                }
+                };
+
+                var chart = new ApexCharts(document.querySelector("#chartproductsgroup"), options);
+                chart.render();
         </script>
 
         <script type="text/javascript">
