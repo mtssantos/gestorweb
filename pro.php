@@ -403,6 +403,61 @@
                         }
                     
                     ?>
+                    <?php
+                        function executarConsulta($con, $FilterData, $empresa, $tipoConsulta)
+                        {
+                            $valores = [];
+                            $itens = [];
+
+                            $sql = <<<EOT
+                                SELECT
+                                    p.$tipoConsulta,
+                                    COUNT(i.Id) AS QuantidadeItens,
+                                    ROUND((COUNT(i.Id) / total.Total) * 100, 2) AS Porcentagem
+                                FROM
+                                    Estoque p
+                                INNER JOIN
+                                    Itens i ON p.Codigo = i.Produto__Codigo
+                                INNER JOIN Vendas v ON i.Sequencia = v.Sequencia
+                                    AND v.Data BETWEEN '$FilterData' AND '$FilterData'
+                                    AND v.Filial = '$empresa'
+                                CROSS JOIN (
+                                    SELECT COUNT(*) AS Total
+                                    FROM Itens
+                                ) total
+                                GROUP BY
+                                    p.$tipoConsulta
+                            EOT;
+
+                            $consulta = mysqli_query($con, $sql);
+                            while ($row = mysqli_fetch_assoc($consulta)) {
+                                $valores[] = ($row['Porcentagem'] == 0) ? 0 : $row['Porcentagem'];
+                                
+                                if ($row['Porcentagem'] != 0) {
+                                    $itens[] = $row[$tipoConsulta];
+                                }
+                            }
+
+                            return ['valores' => implode(',', $valores), 'itens' => implode(',', $itens)];
+                        }
+
+                        mysqli_set_charset($con, 'utf8');
+
+                        if (isset($_POST['date'])) {
+                            $FilterData = $_POST['date'];
+                        } else {
+                            $FilterData = date('Y-m-d');
+                        }
+
+                        $resultadoClasse = executarConsulta($con, $FilterData, $empresa, 'Classe');
+                        $resultadoGrupo = executarConsulta($con, $FilterData, $empresa, 'Grupo');
+
+                        $valoresClasses = $resultadoClasse['valores'];
+                        $classes = $resultadoClasse['itens'];
+
+                        $valoresGrupos = $resultadoGrupo['valores'];
+                        $grupos = $resultadoGrupo['itens'];
+                    ?>
                     <div class="row">
                         <div class="col-xl-6 col-lg-5">
                             <div class="card shadow mb-4">
@@ -412,93 +467,6 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-center">
                                         <div id="chartclass"></div>
-                                        <?php 
-                                        $classes = [];
-                                        $valoresClasses = [];
-
-                                        mysqli_set_charset($con, 'utf8');
-
-                                        if(isset($_POST['date'])){
-                                            $FilterData = $_POST['date'];
-                                            $sql = <<<EOT
-                                                SELECT
-                                                    p.Classe,
-                                                    COUNT(i.Id) AS QuantidadeItens,
-                                                    ROUND((COUNT(i.Id) / total.Total) * 100, 2) AS Porcentagem
-                                                FROM
-                                                    Estoque p
-                                                INNER JOIN
-                                                    Itens i ON p.Codigo = i.Produto__Codigo
-                                                CROSS JOIN (
-                                                    SELECT COUNT(*) AS Total
-                                                    FROM Itens
-                                                ) total
-                                                WHERE 
-                                                    EXISTS (
-                                                        SELECT 1
-                                                        FROM Vendas v
-                                                        WHERE i.Sequencia = v.Sequencia
-                                                        AND v.Data BETWEEN '$FilterData' AND '$FilterData' and v.Filial = '$empresa'
-                                                    )
-                                                GROUP BY
-                                                    p.Classe
-                                            EOT;
-
-                                            mysqli_query($con, "SET SQL_BIG_SELECTS=1");
-                                            $consulta = mysqli_query($con, $sql);
-                                            while($classeVendas = mysqli_fetch_assoc($consulta)){
-                                                if($classeVendas['Porcentagem'] == 0){
-                                                    $valoresClasses[] = 0; 
-                                                } else {
-                                                    $classes[] = $classeVendas['Classe'];
-                                                    $valoresClasses[] = $classeVendas['Porcentagem'];
-                                                }                                          
-                                            }
-                                        } else {
-                                            $FilterData = date('Y-m-d');
-                                            $sql = <<<EOT
-                                                SELECT
-                                                    p.Classe,
-                                                    COUNT(i.Id) AS QuantidadeItens,
-                                                    ROUND((COUNT(i.Id) / total.Total) * 100, 2) AS Porcentagem
-                                                FROM
-                                                    Estoque p
-                                                INNER JOIN
-                                                    Itens i ON p.Codigo = i.Produto__Codigo
-                                                CROSS JOIN (
-                                                    SELECT COUNT(*) AS Total
-                                                    FROM Itens
-                                                ) total
-                                                WHERE 
-                                                    EXISTS (
-                                                        SELECT 1
-                                                        FROM Vendas v
-                                                        WHERE i.Sequencia = v.Sequencia
-                                                        AND v.Data BETWEEN '$FilterData' AND '$FilterData' and v.Filial = '$empresa'
-                                                    )
-                                                GROUP BY
-                                                    p.Classe
-                                            EOT;
-
-                                            mysqli_query($con, "SET SQL_BIG_SELECTS=1");
-
-                                            $consulta = mysqli_query($con, $sql);
-                                            if (!$consulta) {
-                                                die('Erro na consulta SQL: ' . mysqli_error($con));
-                                            }
-                                            while($classeVendas = mysqli_fetch_assoc($consulta)){
-                                                if($classeVendas['Porcentagem'] == 0){
-                                                    $valoresClasses[] = 0; 
-                                                } else {
-                                                    $classes[] = $classeVendas['Classe'];
-                                                    $valoresClasses[] = $classeVendas['Porcentagem'];
-                                                }                                                    
-                                            }
-                                        } 
-
-                                        $valoresClasses = implode(',', $valoresClasses);
-                                        $classes = implode(',', $classes);                                                               
-                                    ?>
                                     </div>
                                 </div>
                             </div>
@@ -511,85 +479,6 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-center">
                                         <div id="chartgroup"></div>
-                                        <?php 
-                                        $grupos = [];
-                                        $valoresGrupos = [];
-
-                                        mysqli_set_charset($con, 'utf8');
-
-                                        if(isset($_POST['date'])){
-                                            $FilterData = $_POST['date'];
-                                            $sql = <<<EOT
-                                                SELECT
-                                                    p.Grupo,
-                                                    COUNT(i.Id) AS QuantidadeItens,
-                                                    ROUND((COUNT(i.Id) / total.Total) * 100, 2) AS Porcentagem
-                                                FROM
-                                                    Estoque p
-                                                INNER JOIN
-                                                    Itens i ON p.Codigo = i.Produto__Codigo
-                                                CROSS JOIN (
-                                                    SELECT COUNT(*) AS Total
-                                                    FROM Itens
-                                                ) total
-                                                WHERE 
-                                                    EXISTS (
-                                                        SELECT 1
-                                                        FROM Vendas v
-                                                        WHERE i.Sequencia = v.Sequencia
-                                                        AND v.Data BETWEEN '$FilterData' AND '$FilterData' and v.Filial = '$empresa'
-                                                    )
-                                                GROUP BY
-                                                    p.Grupo
-                                            EOT;
-                                            $consulta = mysqli_query($con, $sql);
-                                            while($grupoVendas = mysqli_fetch_assoc($consulta)){
-                                                if($grupoVendas['Porcentagem'] == 0){
-                                                    $valoresGrupos[] = 0; 
-                                                } else {
-                                                    $grupos[] = $grupoVendas['Grupo'];
-                                                    $valoresGrupos[] = $grupoVendas['Porcentagem'];
-                                                }                                          
-                                            }
-                                        } else {
-                                            $FilterData = date('Y-m-d');
-                                            $sql = <<<EOT
-                                                SELECT
-                                                    p.Grupo,
-                                                    COUNT(i.Id) AS QuantidadeItens,
-                                                    ROUND((COUNT(i.Id) / total.Total) * 100, 2) AS Porcentagem
-                                                FROM
-                                                    Estoque p
-                                                INNER JOIN
-                                                    Itens i ON p.Codigo = i.Produto__Codigo
-                                                CROSS JOIN (
-                                                    SELECT COUNT(*) AS Total
-                                                    FROM Itens
-                                                ) total
-                                                WHERE 
-                                                    EXISTS (
-                                                        SELECT 1
-                                                        FROM Vendas v
-                                                        WHERE i.Sequencia = v.Sequencia
-                                                        AND v.Data BETWEEN '$FilterData' AND '$FilterData' and v.Filial = '$empresa'
-                                                    )
-                                                GROUP BY
-                                                    p.Grupo
-                                            EOT;
-                                            $consulta = mysqli_query($con, $sql);
-                                            while($grupoVendas = mysqli_fetch_assoc($consulta)){
-                                                if($grupoVendas['Porcentagem'] == 0){
-                                                    $valoresGrupos[] = 0; 
-                                                } else {
-                                                    $grupos[] = $grupoVendas['Grupo'];
-                                                    $valoresGrupos[] = $grupoVendas['Porcentagem'];
-                                                }                                                    
-                                            }
-                                        } 
-
-                                        $valoresGrupos = implode(',', $valoresGrupos);
-                                        $grupos = implode(',', $grupos);                                                               
-                                    ?>
                                     </div>
                                 </div>
                             </div>
@@ -605,10 +494,9 @@
                                     <div class="d-flex justify-content-center">
                                         <div id="chartproductsclass"></div>
                                         <?php
-
                                             $classesGeral = [];
                                             $valoresClassesGeral = [];
-                                        
+
                                             mysqli_set_charset($con, 'utf8');
                                             $sql = <<<EOT
                                                 SELECT
@@ -642,7 +530,7 @@
 
                                             $valoresClassesGeral = implode(',', $valoresClassesGeral);
                                             $classesGeral = implode(',', $classesGeral); 
-                                        ?>
+                                            ?>
                                     </div>
                                 </div>
                             </div>
@@ -656,10 +544,9 @@
                                     <div class="d-flex justify-content-center">
                                         <div id="chartproductsgroup"></div>
                                         <?php
-
                                             $gruposGeral = [];
                                             $valoresGruposGeral = [];
-                                        
+
                                             mysqli_set_charset($con, 'utf8');
                                             $sql = <<<EOT
                                                 SELECT
@@ -693,42 +580,14 @@
 
                                             $valoresGruposGeral = implode(',', $valoresGruposGeral);
                                             $gruposGeral = implode(',', $gruposGeral); 
-                                        ?>
+                                            ?>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-light">Acompanhamento Mensal - Em desenvolvimento</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-center">
-                                        <div id="chartmensality"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-light">Análise de Meta - Em desenvolvimento</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-center">
-                                        <div id="chartmeta"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    </main>
+        </main>
                             
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -920,78 +779,78 @@
 
         <script type="text/javascript">
                  var options = {
-                series: [{
-                    data: [<?php echo $valoresGruposGeral; ?>]
-                }],
-                chart: {
-                    height: 350,
-                    width: 650,
-                    type: 'bar',
-                    foreColor: '#fff', 
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 10,
-                        dataLabels: {
-                            position: 'top',  
+                    series: [{
+                        data: [<?php echo $valoresGruposGeral; ?>]
+                    }],
+                    chart: {
+                        height: 350,
+                        width: 650,
+                        type: 'bar',
+                        foreColor: '#fff', 
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 10,
+                            dataLabels: {
+                                position: 'top',  
+                            },
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val) {
+                            return val + "%";
                         },
-                    }
-                },
-                dataLabels: {
-                    enabled: true,
-                    formatter: function (val) {
-                        return val + "%";
+                        offsetY: 0,
+                        style: {
+                            fontSize: '12px',
+                            colors: ["#fff"]
+                        }
                     },
-                    offsetY: 0,
-                    style: {
-                        fontSize: '12px',
-                        colors: ["#fff"]
-                    }
-                },
-                
-                xaxis: {
-                    categories: [<?php echo "'" . str_replace(",", "','", $gruposGeral) . "'"; ?>],
-                    position: '',
-                    colors: ["#fff"],
-                    axisBorder: {
-                        show: false
-                    },
-                    axisTicks: {
-                        show: false
-                    },
-                    stroke: {
-                        color: '#fff',
-                        width: 0,
-                        dashArray: 0,
-                    },
-                    crosshairs: {
-                        fill: {
-                            type: 'solid',
+                    
+                    xaxis: {
+                        categories: [<?php echo "'" . str_replace(",", "','", $gruposGeral) . "'"; ?>],
+                        position: '',
+                        colors: ["#fff"],
+                        axisBorder: {
+                            show: false
+                        },
+                        axisTicks: {
+                            show: false
+                        },
+                        stroke: {
                             color: '#fff',
-                            gradient: {
-                                colorFrom: '#fff',
-                                colorTo: '#fff',
-                                stops: [0, 100],
-                                opacityFrom: 0.4,
-                                opacityTo: 0.5,
+                            width: 0,
+                            dashArray: 0,
+                        },
+                        crosshairs: {
+                            fill: {
+                                type: 'solid',
+                                color: '#fff',
+                                gradient: {
+                                    colorFrom: '#fff',
+                                    colorTo: '#fff',
+                                    stops: [0, 100],
+                                    opacityFrom: 0.4,
+                                    opacityTo: 0.5,
+                                }
+                            }
+                        }
+                    },
+                    yaxis: {
+                        axisBorder: {
+                            show: false
+                        },
+                        axisTicks: {
+                            show: false,
+                        },
+                        labels: {
+                            show: false,
+                            formatter: function (val) {
+                                return val + "%";
                             }
                         }
                     }
-                },
-                yaxis: {
-                    axisBorder: {
-                        show: false
-                    },
-                    axisTicks: {
-                        show: false,
-                    },
-                    labels: {
-                        show: false,
-                        formatter: function (val) {
-                            return val + "%";
-                        }
-                    }
-                }
                 };
 
                 var chart = new ApexCharts(document.querySelector("#chartproductsgroup"), options);
@@ -1252,9 +1111,7 @@
                 xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 xhr.send('cnpj=' + cnpj);
             }
-        </script>
-
-        
+        </script>        
 
     </body>
 
